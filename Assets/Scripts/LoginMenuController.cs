@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
 
 public class LoginMenuController : MonoBehaviour
@@ -24,6 +21,7 @@ public class LoginMenuController : MonoBehaviour
 
     [Header("Register Menu Objects")]
     [SerializeField] TMP_InputField registerUsernameEntry;
+    [SerializeField] const int CharLim = 20;
     [SerializeField] TMP_InputField registerEmailEntry;
     [SerializeField] TMP_InputField registerPasswordEntry;
     [SerializeField] TMP_InputField registerPasswordConfirmEntry;
@@ -37,6 +35,11 @@ public class LoginMenuController : MonoBehaviour
     [SerializeField] TMP_Text profileHighscore;
     [SerializeField] Button logoutButton;
     [SerializeField] Button startGameButton;
+
+    [Header("UserManager")]
+    [SerializeField] UserManager userManager;
+
+    
 
 
     // Start is called before the first frame update
@@ -65,20 +68,11 @@ public class LoginMenuController : MonoBehaviour
         });
 
         
-        if (PlayerPrefs.GetString("currentUser") != null)
+        if (userManager.currentUserIndex > -1)
         {
-            string userToFind = PlayerPrefs.GetString("currentUser");
-            List<userData> usersData = loadData();
-            foreach (userData data in usersData)
-            {
-                if (data._userName == userToFind)
-                {
-                    hideAllPanels();
-                    profileMenu.SetActive(true);
-                    updateProfile(data);
-                    break;
-                }
-            }
+            hideAllPanels();
+            profileMenu.SetActive(true);
+            updateProfile(userManager.lastLoadedData[userManager.currentUserIndex]);
         }
     }
 
@@ -115,7 +109,7 @@ public class LoginMenuController : MonoBehaviour
 
     void register()
     {
-        List<userData> usersData = loadData();
+        List<userData> usersData = userManager.loadData();
 
         string errorMsg = validateUsername(registerUsernameEntry.text, usersData);
         if (errorMsg != null)
@@ -140,19 +134,22 @@ public class LoginMenuController : MonoBehaviour
 
         userData newUser = new userData(registerUsernameEntry.text, registerPasswordEntry.text, registerEmailEntry.text);
         usersData.Add(newUser);
-        saveData(usersData);
+        userManager.saveData(usersData);
         switchPanels(profileMenu, registerMenu);
         updateProfile(newUser);
-        PlayerPrefs.SetString("currentUser", newUser._userName);
+
+        //PlayerPrefs.SetString("currentUser", newUser._userName);
+        userManager.currentUserIndex = usersData.IndexOf(newUser);
+        userManager.currentUser = newUser;
+
         clearFields();
     }
 
     void login()
     {
-        List<userData> usersData = loadData();
+        List<userData> usersData = userManager.loadData();
 
         //find username
-        //loginUsernameEntry.text
         userData foundUser = null;
         foreach (userData data in usersData)
         {
@@ -182,7 +179,9 @@ public class LoginMenuController : MonoBehaviour
             //both username and passowrd were correct
             switchPanels(profileMenu, loginMenu);
             updateProfile(foundUser);
-            PlayerPrefs.SetString("currentUser", foundUser._userName);
+            //PlayerPrefs.SetString("currentUser", foundUser._userName);
+            userManager.currentUserIndex = usersData.IndexOf(foundUser);
+            userManager.currentUser = foundUser;
             clearFields();
         }
     }
@@ -193,7 +192,9 @@ public class LoginMenuController : MonoBehaviour
 
         switchPanels(loginMenu, profileMenu);
 
-        PlayerPrefs.SetString("currentUser", null);
+        //PlayerPrefs.SetString("currentUser", null);
+        userManager.currentUser = null;
+        userManager.currentUserIndex = -1;
     }
 
     void updateProfile(userData userData)
@@ -210,6 +211,11 @@ public class LoginMenuController : MonoBehaviour
         if (string.IsNullOrWhiteSpace(username) || username.Contains(" "))
         {
             return "Username is empty or contains spaces";
+        }
+
+        if (username.Length > CharLim)
+        {
+            return "Username is longer than the 20 character limit";
         }
 
         //Check if username already exists
@@ -258,58 +264,5 @@ public class LoginMenuController : MonoBehaviour
         }
 
         return null;
-    }
-
-    List<userData> loadData()
-    {
-        if (File.Exists(Application.persistentDataPath + "/usersData.dat"))
-        {
-            List<userData> usersData = new List<userData>();
-            BinaryFormatter bf = new BinaryFormatter();
-
-            FileStream file = File.Open(Application.persistentDataPath + "/usersData.dat", FileMode.Open);
-            usersData = (List<userData>)bf.Deserialize(file);
-            file.Close();
-            return usersData;
-        } 
-        else 
-        {
-            return new List<userData>();
-        }
-    }
-    
-    void saveData(List<userData> usersData)
-    {
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/usersData.dat");
-        bf.Serialize(file, usersData);
-        file.Close();
-    }
-
-}
-
-
-[Serializable]
-public class userData
-{
-    public string _userName;
-    public string _password;
-    public string _email;
-    public int highScore;
-
-    public userData(string userName, string password, string email)
-    {
-        _userName = userName;
-        _password = password;
-        _email = email;
-        highScore = 0;
-    }
-
-    public userData()
-    {
-        _userName = null;
-        _password = null;
-        _email = null;
-        highScore = 0;
     }
 }

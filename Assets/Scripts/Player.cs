@@ -18,13 +18,13 @@ public class Player : MonoBehaviour
     private ParticleSystem collisionEffectParticleSystem;
 
     //Gameplay
-    [SerializeField] private int score;
+    [SerializeField] public int score;
     [SerializeField] private int lives;
+    [SerializeField] private int maxLives = 5;
 
     //UI
     private UiController UiController;
     [SerializeField] private TMP_Text scoreText;
-    [SerializeField] private TMP_Text deathScoreText;
     [SerializeField] private TMP_Text livesText;
     
     void Awake()
@@ -86,37 +86,47 @@ public class Player : MonoBehaviour
         livesText.text = $"Lives: {lives}";
     }
 
-    // ensure trigger is unticked for gameObject 
-    private void OnCollisionEnter(Collision collision) 
-    { 
-        if (collision.gameObject.CompareTag("Obstacle")) 
-        {  
-            collisionEffect.transform.position = collision.transform.position; 
-            collisionEffectParticleSystem.Play();
-            GameObject.Destroy(collision.gameObject);
-            lives -= 1;
-            updateLives(lives);
-            if (lives < 1)
-            {
-                Invoke("DisplayGameOverUI", 2.533f);
-                deathScoreText.text = $"Score: {score}";
-            }
-            
-        } 
-    } 
  
     // ensure trigger is ticked for gameObject 
     private void OnTriggerEnter(Collider collision) 
     { 
         if (collision.CompareTag("Reward")) 
-        { 
-            score++; 
-            updateScore(score); 
-            Debug.Log("Collided with " + collision); 
-            coinEffect.transform.position = collision.transform.position;
-            coinEffectParticleSystem.Play();
+        {
+            Reward reward = collision.GetComponent<Reward>();
+            Debug.Log("Collided with " + collision);
+            if (reward.rewardType == "Coin")
+            {
+                score++;
+                updateScore(score); 
+                coinEffect.transform.position = collision.transform.position;
+                coinEffectParticleSystem.Play();
+            } 
+            if (reward.rewardType == "Life")
+            {
+                //play life effect;
+                if (lives < maxLives)
+                {
+                    lives++;
+                    updateLives(lives);
+                }
+            }
+            
             //Instantiate(coinEffect, transform.position, transform.rotation); 
             Destroy(collision.gameObject); 
+        } 
+
+        if (collision.gameObject.CompareTag("Obstacle")) 
+        {  
+            collisionEffect.transform.position = collision.transform.position; 
+            collisionEffectParticleSystem.Play();
+            GameObject.Destroy(collision.gameObject);
+            lives--;
+            updateLives(lives);
+            if (lives < 1)
+            {
+                Invoke("DisplayGameOverUI", 0);
+            }
+            
         } 
     } 
  
