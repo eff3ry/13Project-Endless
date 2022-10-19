@@ -12,6 +12,7 @@ public class UserManager : MonoBehaviour
     public int currentUserIndex = -1;
     static bool created = false;
 
+    //make sure there is only ever one usermanager
     void Awake()
     {
         if (!created || GameObject.FindObjectsOfType<UserManager>().Length == 1) {
@@ -28,7 +29,7 @@ public class UserManager : MonoBehaviour
         }
     }  
 
-    
+    //load user info from file
     public List<userData> loadData()
     {
         if (File.Exists(Application.persistentDataPath + "/usersData.dat"))
@@ -49,6 +50,7 @@ public class UserManager : MonoBehaviour
         }
     }
     
+    //save user info to file
     public void saveData(List<userData> usersData)
     {
         BinaryFormatter bf = new BinaryFormatter();
@@ -58,6 +60,8 @@ public class UserManager : MonoBehaviour
     } 
 }
 
+
+//user info class
 [Serializable]
 public class userData
 {

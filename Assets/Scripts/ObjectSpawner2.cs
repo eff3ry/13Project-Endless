@@ -22,6 +22,7 @@ public class ObjectSpawner2 : MonoBehaviour
     float timer = 0;
 
     // Update is called once per frame
+    //spawns items when timer is 0
     void Update()
     {
         timer += Time.deltaTime;
@@ -43,7 +44,7 @@ public class ObjectSpawner2 : MonoBehaviour
                 {
                     GameObject obj = Instantiate(obstacle, spawnPoints[i].transform.position, transform.rotation, cloneParent.transform); 
                     obj.GetComponent<ObstacleMovement>().speed = obstacleSpeed;
-                    Debug.Log("Spawn Obstacle");
+                    //Debug.Log("Spawn Obstacle");
                 } else if (spawnList[i] == 2)
                 {
                     //pick random reward
@@ -61,6 +62,8 @@ public class ObjectSpawner2 : MonoBehaviour
     // 1 is obstacle
     // 2 is reward
 
+
+    //generates a list on items to spawn
     List<int> generateSpawnList()
     {
         List<int> spawns = new List<int>();

@@ -26,6 +26,7 @@ public class GameOverMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //set button methods
         restartButton.onClick.AddListener(delegate { Debug.Log("Restart"); restartGame(); });
         saveScoreButton.onClick.AddListener(delegate {saveHighScore(player.score); });
         backToMenuButton.onClick.AddListener(delegate {backToMenu();});
@@ -42,6 +43,7 @@ public class GameOverMenu : MonoBehaviour
         scoreText.text = $"Score: {player.score}";
     }
 
+    //saves current score to highscore
     void saveHighScore(int score)
     {
         userManager.lastLoadedData[userManager.currentUserIndex].highScore = score;
@@ -51,11 +53,13 @@ public class GameOverMenu : MonoBehaviour
         highscoreText.text = $"Highscore: {userManager.currentUser.highScore}";
     }
 
+    //change to menu scene
     void backToMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Login");
     }
+    //restart the game
     void restartGame()
     {
         Time.timeScale = 1f;

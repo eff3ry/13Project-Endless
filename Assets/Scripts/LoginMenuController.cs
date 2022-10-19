@@ -39,12 +39,17 @@ public class LoginMenuController : MonoBehaviour
     [Header("UserManager")]
     [SerializeField] UserManager userManager;
 
-    
+    void Awake()
+    {
+        //find the user manager
+        userManager = FindObjectOfType<UserManager>();
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        //set buttons
         switchToRegisterButton.onClick.AddListener(delegate { 
             switchPanels(registerMenu, loginMenu);
             clearFields();
@@ -67,7 +72,7 @@ public class LoginMenuController : MonoBehaviour
             startGame();
         });
 
-        
+        //login the current user when scene loads
         if (userManager.currentUserIndex > -1)
         {
             hideAllPanels();
@@ -81,6 +86,7 @@ public class LoginMenuController : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    //clear the input fields
     void clearFields()
     {
         loginUsernameEntry.text = "";
@@ -94,12 +100,14 @@ public class LoginMenuController : MonoBehaviour
         registerErrorText.text = "";
     }
 
+    //switch ui panels
     void switchPanels(GameObject show, GameObject hide)
     {
         show.SetActive(true);
         hide.SetActive(false);
     }
 
+    //hide all ui panels
     void hideAllPanels()
     {
         loginMenu.SetActive(false);
@@ -107,6 +115,8 @@ public class LoginMenuController : MonoBehaviour
         profileMenu.SetActive(false);
     }
 
+
+    //register account
     void register()
     {
         List<userData> usersData = userManager.loadData();
@@ -145,6 +155,7 @@ public class LoginMenuController : MonoBehaviour
         clearFields();
     }
 
+    //login account
     void login()
     {
         List<userData> usersData = userManager.loadData();
@@ -186,6 +197,7 @@ public class LoginMenuController : MonoBehaviour
         }
     }
 
+    //logout of account
     void logout()
     {
         updateProfile(new userData());
@@ -197,6 +209,7 @@ public class LoginMenuController : MonoBehaviour
         userManager.currentUserIndex = -1;
     }
 
+    //update the ui for the profile
     void updateProfile(userData userData)
     {
         profileUsername.text = userData._userName;

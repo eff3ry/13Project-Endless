@@ -7,9 +7,9 @@ using TMPro;
 public class Player : MonoBehaviour 
 { 
     //Movement Vars
-    [SerializeField] private float speed = 10f; 
-    [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private float targetAngle = 30f;
+    [SerializeField] private const float speed = 10f; 
+    [SerializeField] private const float rotationSpeed = 10f;
+    [SerializeField] private const float targetAngle = 30f;
 
     //Effects
     [SerializeField] private GameObject coinEffect;
@@ -20,13 +20,13 @@ public class Player : MonoBehaviour
     //Gameplay
     [SerializeField] public int score;
     [SerializeField] private int lives;
-    [SerializeField] private int maxLives = 5;
+    [SerializeField] private const int maxLives = 5;
 
     //UI
     private UiController UiController;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
-    
+    [SerializeField] private Image healthBar;    
     void Awake()
     {
         UiController = FindObjectOfType<UiController>();
@@ -34,10 +34,15 @@ public class Player : MonoBehaviour
    
     void Start() 
     { 
+        //set the particle systems
         coinEffectParticleSystem = coinEffect.GetComponent<ParticleSystem>();
         collisionEffectParticleSystem = collisionEffect.GetComponent<ParticleSystem>();
-        lives = 5;
 
+        //set inital lives
+        lives = maxLives;
+
+        //update ui on scene start
+        healthBar.fillMethod = Image.FillMethod.Horizontal;
         updateLives(lives);
     } 
 
@@ -46,9 +51,11 @@ public class Player : MonoBehaviour
         Movement(); 
     } 
 
+    //handle player movement
     void Movement() 
     {   
 
+        //limit x movement
         Vector3 pos = transform.position;
         
         if (pos.x < -4.5f)
@@ -75,15 +82,21 @@ public class Player : MonoBehaviour
         
     } 
 
+    //updates the ui elements displaying the score counter
     private void updateScore(int score)
     {
         scoreText.text = $"Score: {score}";
         
     }
 
+    //updates the ui elements displaying the life counter and healthbar
     private void updateLives(int lives)
     {
         livesText.text = $"Lives: {lives}";
+        float healthBarPercentage = (float)lives/(float)maxLives;
+        healthBar.fillAmount = healthBarPercentage;
+        Debug.Log($"Lives: {lives}");
+        Debug.Log($"HealthBar: {healthBarPercentage}");
     }
 
  
@@ -130,6 +143,7 @@ public class Player : MonoBehaviour
         } 
     } 
  
+    //freeze time and swap to the Game Over ui
     private void DisplayGameOverUI() 
     { 
         UiController.ChangeUiPanel(1);
