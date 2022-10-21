@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] public int score;
     [SerializeField] private int lives;
     [SerializeField] private const int maxLives = 5;
+    public bool isAlive;
 
     //UI
     private UiController UiController;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
 
         //set inital lives
         lives = maxLives;
+        isAlive = true;
 
         //update ui on scene start
         healthBar.fillMethod = Image.FillMethod.Horizontal;
@@ -137,6 +139,7 @@ public class Player : MonoBehaviour
             updateLives(lives);
             if (lives < 1)
             {
+                isAlive = false;
                 Invoke("DisplayGameOverUI", 0);
             }
             

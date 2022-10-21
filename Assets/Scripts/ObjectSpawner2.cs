@@ -33,11 +33,14 @@ public class ObjectSpawner2 : MonoBehaviour
 
             List<int> spawnList = generateSpawnList();
             // Make sure there is an object which lets you pass (make sure it not impossible)
+            //keep generating unitll it works
             while (!(spawnList.Contains(0) || spawnList.Contains(2)))
             {
                 spawnList = generateSpawnList();
             }
 
+
+            //insntantiate each object
             for (int i = 0; i < spawnList.Count; i++)
             {
                 if (spawnList[i] == 1)
