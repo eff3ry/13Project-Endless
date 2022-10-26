@@ -17,7 +17,6 @@ public class SpawnerManager : MonoBehaviour
         {
             spawner.coinChance = coinChance;
             spawner.spawnChance = spawnChance;
-
         }
     }
 
@@ -33,7 +32,5 @@ public class SpawnerManager : MonoBehaviour
                 spawner.spawnDelay = spawnDelay;
             }
         }
-        
-        
     }
 }

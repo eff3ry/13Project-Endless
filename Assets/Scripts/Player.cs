@@ -7,9 +7,9 @@ using TMPro;
 public class Player : MonoBehaviour 
 { 
     //Movement Vars
-    [SerializeField] private const float speed = 10f; 
-    [SerializeField] private const float rotationSpeed = 10f;
-    [SerializeField] private const float targetAngle = 30f;
+    [SerializeField] private const float speed = 10f; //constant for a more robust program
+    [SerializeField] private const float rotationSpeed = 10f;//constant for a more robust program
+    [SerializeField] private const float targetAngle = 30f;//constant for a more robust program
 
     //Effects
     [SerializeField] private GameObject coinEffect;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     //Gameplay
     [SerializeField] public int score;
     [SerializeField] private int lives;
-    [SerializeField] private const int maxLives = 5;
+    [SerializeField] private const int maxLives = 5; //constant for a more robust program
     public bool isAlive;
 
     //UI
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
         }
         transform.position = pos;
 
-
+        //only move if the character is within the boundrys
         if (transform.position.x >= -4.5f && transform.position.x <= 4.5f)
         {
             transform.position = transform.position + new Vector3(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, 0);  

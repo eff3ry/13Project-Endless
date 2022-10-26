@@ -12,13 +12,14 @@ public class GameOverMenu : MonoBehaviour
     [SerializeField] private Button backToMenuButton;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text highscoreText;
-    [SerializeField] Player player;
+    [SerializeField] private Player player;
 
 
     private UserManager userManager;
     private UiController uiController;
     void Awake()
     {
+        //find helpful objects
         uiController = FindObjectOfType<UiController>();
         userManager = FindObjectOfType<UserManager>();
     }

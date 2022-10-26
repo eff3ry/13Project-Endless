@@ -9,7 +9,7 @@ public class HighscoreManager : MonoBehaviour
     [SerializeField] TMP_Text names;
     [SerializeField] TMP_Text scores;
     UserManager userManager;
-    int numOfScoresToShow = 5;
+    const int numOfScoresToShow = 5; // constant for a more robust program
     void Awake()
     {
         userManager = FindObjectOfType<UserManager>();

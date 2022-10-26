@@ -21,7 +21,7 @@ public class LoginMenuController : MonoBehaviour
 
     [Header("Register Menu Objects")]
     [SerializeField] TMP_InputField registerUsernameEntry;
-    [SerializeField] const int CharLim = 20;
+    [SerializeField] const int CharLim = 20; //Username char max limit, constant for a more robust program
     [SerializeField] TMP_InputField registerEmailEntry;
     [SerializeField] TMP_InputField registerPasswordEntry;
     [SerializeField] TMP_InputField registerPasswordConfirmEntry;
@@ -117,8 +117,10 @@ public class LoginMenuController : MonoBehaviour
 
 
     //register account
+    //accepts username email and password
     void register()
     {
+        //load data from file
         List<userData> usersData = userManager.loadData();
 
         string errorMsg = validateUsername(registerUsernameEntry.text, usersData);

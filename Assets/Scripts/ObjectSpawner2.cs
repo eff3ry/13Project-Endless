@@ -25,15 +25,18 @@ public class ObjectSpawner2 : MonoBehaviour
     //spawns items when timer is 0
     void Update()
     {
+        //keep track of time
         timer += Time.deltaTime;
 
+        //when timer is done
         if (timer > spawnTime)
         {
             timer = 0;
 
+            //generate a list of objects to spawn
             List<int> spawnList = generateSpawnList();
             // Make sure there is an object which lets you pass (make sure it not impossible)
-            //keep generating unitll it works
+            //keep generating until there is a valid list
             while (!(spawnList.Contains(0) || spawnList.Contains(2)))
             {
                 spawnList = generateSpawnList();
