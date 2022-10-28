@@ -105,10 +105,12 @@ public class Player : MonoBehaviour
     // ensure trigger is ticked for gameObject 
     private void OnTriggerEnter(Collider collision) 
     { 
+        //if object is a reward
         if (collision.CompareTag("Reward")) 
         {
             Reward reward = collision.GetComponent<Reward>();
             Debug.Log("Collided with " + collision);
+            // if its a coin
             if (reward.rewardType == "Coin")
             {
                 score++;
@@ -116,9 +118,10 @@ public class Player : MonoBehaviour
                 coinEffect.transform.position = collision.transform.position;
                 coinEffectParticleSystem.Play();
             } 
+            //if its a life
             if (reward.rewardType == "Life")
             {
-                //play life effect;
+                //increase lives
                 if (lives < maxLives)
                 {
                     lives++;
@@ -130,13 +133,18 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject); 
         } 
 
+        //if the object is an obstacle
         if (collision.gameObject.CompareTag("Obstacle")) 
         {  
+            //play the effect
             collisionEffect.transform.position = collision.transform.position; 
             collisionEffectParticleSystem.Play();
+            //destroy the object
             GameObject.Destroy(collision.gameObject);
+            //decrease lives
             lives--;
             updateLives(lives);
+            //check if the player is dead
             if (lives < 1)
             {
                 isAlive = false;

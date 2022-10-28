@@ -15,6 +15,7 @@ public class UserManager : MonoBehaviour
     //make sure there is only ever one usermanager
     void Awake()
     {
+        //this code makes sure there is only one of this object in the scene basically a singleton
         if (!created || GameObject.FindObjectsOfType<UserManager>().Length == 1) {
             // this is the first instance - make it persist
             DontDestroyOnLoad(this.gameObject);
@@ -32,6 +33,7 @@ public class UserManager : MonoBehaviour
     //load user info from file
     public List<userData> loadData()
     {
+        //if the file exists load it if not return empty class object
         if (File.Exists(Application.persistentDataPath + "/usersData.dat"))
         {
             List<userData> usersData = new List<userData>();
