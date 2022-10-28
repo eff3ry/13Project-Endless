@@ -39,9 +39,11 @@ public class LoginMenuController : MonoBehaviour
     [Header("UserManager")]
     [SerializeField] UserManager userManager;
 
+    [SerializeField] Button quitButton;
+
     void Awake()
     {
-        //find the user manager
+        //find the user manager for usefull user related functions
         userManager = FindObjectOfType<UserManager>();
     }
 
@@ -49,7 +51,7 @@ public class LoginMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //set buttons
+        //set buttons to call methods
         switchToRegisterButton.onClick.AddListener(delegate { 
             switchPanels(registerMenu, loginMenu);
             clearFields();
@@ -72,7 +74,12 @@ public class LoginMenuController : MonoBehaviour
             startGame();
         });
 
+        quitButton.onClick.AddListener(delegate {
+            quitGame();
+        });
+
         //login the current user when scene loads
+        //if the user is already logged in
         if (userManager.currentUserIndex > -1)
         {
             hideAllPanels();
@@ -81,12 +88,18 @@ public class LoginMenuController : MonoBehaviour
         }
     }
 
+    // exits game
+    void quitGame()
+    {
+        Application.Quit();
+    }
     void startGame()
     {
         SceneManager.LoadScene("Game");
     }
 
     //clear the input fields
+    //sets all the text components to empty strings
     void clearFields()
     {
         loginUsernameEntry.text = "";
@@ -101,6 +114,7 @@ public class LoginMenuController : MonoBehaviour
     }
 
     //switch ui panels
+    //hides the current object and shows the requested one
     void switchPanels(GameObject show, GameObject hide)
     {
         show.SetActive(true);
@@ -108,6 +122,7 @@ public class LoginMenuController : MonoBehaviour
     }
 
     //hide all ui panels
+    //hides all menu gameobjects
     void hideAllPanels()
     {
         loginMenu.SetActive(false);
@@ -123,6 +138,7 @@ public class LoginMenuController : MonoBehaviour
         //load data from file
         List<userData> usersData = userManager.loadData();
 
+        //Vaidates username
         string errorMsg = validateUsername(registerUsernameEntry.text, usersData);
         if (errorMsg != null)
         {
@@ -130,6 +146,7 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
+        //validates password
         errorMsg = validatePassword(registerPasswordEntry.text, registerPasswordConfirmEntry.text);
         if (errorMsg != null)
         {
@@ -137,6 +154,7 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
+        //validates email
         errorMsg = validateEmail(registerEmailEntry.text, usersData);
         if (errorMsg != null)
         {
@@ -144,6 +162,7 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
+        //ass checks passed so create new user
         userData newUser = new userData(registerUsernameEntry.text, registerPasswordEntry.text, registerEmailEntry.text);
         usersData.Add(newUser);
         userManager.saveData(usersData);
@@ -190,6 +209,7 @@ public class LoginMenuController : MonoBehaviour
         } else 
         {
             //both username and passowrd were correct
+            //log in
             switchPanels(profileMenu, loginMenu);
             updateProfile(foundUser);
             //PlayerPrefs.SetString("currentUser", foundUser._userName);
@@ -202,11 +222,12 @@ public class LoginMenuController : MonoBehaviour
     //logout of account
     void logout()
     {
+        //set data to empty
         updateProfile(new userData());
-
+        //switch to menu
         switchPanels(loginMenu, profileMenu);
 
-        //PlayerPrefs.SetString("currentUser", null);
+        //set curent user to null
         userManager.currentUser = null;
         userManager.currentUserIndex = -1;
     }

@@ -64,14 +64,17 @@ public class UserManager : MonoBehaviour
 
 
 //user info class
+//stores username and password and email and highscore in a custom object for saving and loading
 [Serializable]
 public class userData
 {
+    //read only for variables that should'nt be edited
     readonly public string _userName;
     readonly public string _password;
     readonly public string _email;
     public int highScore;
 
+    //constructor for a full object
     public userData(string userName, string password, string email)
     {
         _userName = userName;
@@ -80,6 +83,7 @@ public class userData
         highScore = 0;
     }
 
+    //constructor for a empty object
     public userData()
     {
         _userName = null;

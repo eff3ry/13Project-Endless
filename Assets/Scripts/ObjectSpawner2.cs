@@ -13,12 +13,6 @@ public class ObjectSpawner2 : MonoBehaviour
     public GameObject[] rewards;
     //public GameObject coin;
     public GameObject obstacle;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     float timer = 0;
 
     // Update is called once per frame
@@ -42,12 +36,12 @@ public class ObjectSpawner2 : MonoBehaviour
                 spawnList = generateSpawnList();
             }
 
-
-            //insntantiate each object
+            //loop throught the list to insntantiate each object
             for (int i = 0; i < spawnList.Count; i++)
             {
                 if (spawnList[i] == 1)
                 {
+                    //spawn obstacle
                     GameObject obj = Instantiate(obstacle, spawnPoints[i].transform.position, transform.rotation, cloneParent.transform); 
                     obj.GetComponent<ObstacleMovement>().speed = obstacleSpeed;
                     //Debug.Log("Spawn Obstacle");
@@ -72,6 +66,7 @@ public class ObjectSpawner2 : MonoBehaviour
     //generates a list on items to spawn
     List<int> generateSpawnList()
     {
+        //makes a list of ints for deciding the object to spawn and in what position
         List<int> spawns = new List<int>();
         foreach (GameObject point in spawnPoints)
         {
