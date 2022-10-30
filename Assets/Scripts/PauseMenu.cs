@@ -14,7 +14,7 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        //assign methods to buttons
+        // Assign methods to buttons
         resumeButton.onClick.AddListener(delegate {resume();});
         backButton.onClick.AddListener(delegate {back();});
     }
@@ -22,35 +22,28 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        //check for esc kay and pause or unpause
+        // Check for esc key and pause or unpause
         if (Input.GetKeyDown(KeyCode.Escape) && player.isAlive)
         {
-            if (menu.activeSelf)
-            {
-                resume();
-            }
-            else
-            {
-                pause();
-            }
-            
+            // If active call resume and if not active call pause
+            (menu.activeSelf)? resume() : pause();            
         }
     }
 
-    //freezes game and shows pause menu
+    // Freezes game and shows pause menu
     void pause()
     {
         Time.timeScale = 0;
         uiController.ChangeUiPanel(2);
     }
-    //unfreezes and hides pause menu
+    // Unfreezes and hides pause menu
     void resume()
     {
         Time.timeScale =1f;
         uiController.ChangeUiPanel(0);
     }
 
-    //changes scene back to the main menu
+    // Changes scene back to the main menu
     void back()
     {
         Time.timeScale = 1f;

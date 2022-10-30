@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic; 
 using UnityEngine; 
 
+// DEPRECATED SCRIPT NOT USED
 public class ObjectSpawner : MonoBehaviour 
 { 
     public GameObject coin;

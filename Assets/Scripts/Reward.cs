@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Reward : MonoBehaviour
 {
-    //just a public string for defining a reward type
+    // Just a public string for defining a reward type
     public string rewardType;
 }

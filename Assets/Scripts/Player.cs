@@ -7,43 +7,49 @@ using TMPro;
 public class Player : MonoBehaviour 
 { 
     //Movement Vars
+    [Header("Movement Vars")]
     [SerializeField] private const float speed = 10f; //constant for a more robust program
     [SerializeField] private const float rotationSpeed = 10f;//constant for a more robust program
     [SerializeField] private const float targetAngle = 30f;//constant for a more robust program
 
     //Effects
+    [Header("Effects")]
     [SerializeField] private GameObject coinEffect;
     private ParticleSystem coinEffectParticleSystem;
     [SerializeField] private GameObject collisionEffect;
     private ParticleSystem collisionEffectParticleSystem;
 
     //Gameplay
+    [Header("Gameplay")]
     [SerializeField] public int score;
     [SerializeField] private int lives;
     [SerializeField] private const int maxLives = 5; //constant for a more robust program
     public bool isAlive;
 
     //UI
+    [Header("UI")]
     private UiController UiController;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
-    [SerializeField] private Image healthBar;    
+    [SerializeField] private Image healthBar; 
+
     void Awake()
     {
+        // Find the UI controller in the scene
         UiController = FindObjectOfType<UiController>();
     }
    
     void Start() 
     { 
-        //set the particle systems
+        // Find the particle systems components
         coinEffectParticleSystem = coinEffect.GetComponent<ParticleSystem>();
         collisionEffectParticleSystem = collisionEffect.GetComponent<ParticleSystem>();
 
-        //set inital lives
+        // Set inital lives
         lives = maxLives;
         isAlive = true;
 
-        //update ui on scene start
+        // Update health UI on scene start
         healthBar.fillMethod = Image.FillMethod.Horizontal;
         updateLives(lives);
     } 
@@ -53,11 +59,11 @@ public class Player : MonoBehaviour
         Movement(); 
     } 
 
-    //handle player movement
+    // Handle player movement
     void Movement() 
     {   
 
-        //limit x movement
+        // Limit x movement
         Vector3 pos = transform.position;
         
         if (pos.x < -4.5f)
@@ -69,13 +75,13 @@ public class Player : MonoBehaviour
         }
         transform.position = pos;
 
-        //only move if the character is within the boundrys
+        // Only move if the character is within the boundrys
         if (transform.position.x >= -4.5f && transform.position.x <= 4.5f)
         {
             transform.position = transform.position + new Vector3(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, 0);  
         }
         
-        // rotate character by 30 degrees 
+        // Rotate character by 30 degrees 
         float z = Input.GetAxis("Horizontal") * -targetAngle; 
         Vector3 euler = transform.localEulerAngles; 
         euler.z = Mathf.LerpAngle(euler.z, z, Time.deltaTime * rotationSpeed); 
@@ -84,14 +90,13 @@ public class Player : MonoBehaviour
         
     } 
 
-    //updates the ui elements displaying the score counter
+    // Updates the ui elements displaying the score counter
     private void updateScore(int score)
     {
-        scoreText.text = $"Score: {score}";
-        
+        scoreText.text = $"Score: {score}";  
     }
 
-    //updates the ui elements displaying the life counter and healthbar
+    // Updates the ui elements displaying the life counter and healthbar
     private void updateLives(int lives)
     {
         livesText.text = $"Lives: {lives}";
@@ -102,15 +107,15 @@ public class Player : MonoBehaviour
     }
 
  
-    // ensure trigger is ticked for gameObject 
+    // Ensure trigger is ticked for gameObject 
     private void OnTriggerEnter(Collider collision) 
     { 
-        //if object is a reward
+        // If object is a reward
         if (collision.CompareTag("Reward")) 
         {
             Reward reward = collision.GetComponent<Reward>();
             Debug.Log("Collided with " + collision);
-            // if its a coin
+            // If its a coin
             if (reward.rewardType == "Coin")
             {
                 score++;
@@ -118,43 +123,41 @@ public class Player : MonoBehaviour
                 coinEffect.transform.position = collision.transform.position;
                 coinEffectParticleSystem.Play();
             } 
-            //if its a life
+            // If its a life
             if (reward.rewardType == "Life")
             {
-                //increase lives
+                // Increase lives
                 if (lives < maxLives)
                 {
                     lives++;
                     updateLives(lives);
                 }
             }
-            
-            //Instantiate(coinEffect, transform.position, transform.rotation); 
+            // Destroy the Object
             Destroy(collision.gameObject); 
         } 
 
-        //if the object is an obstacle
+        // If the object is an obstacle
         if (collision.gameObject.CompareTag("Obstacle")) 
         {  
-            //play the effect
+            // Play the effect
             collisionEffect.transform.position = collision.transform.position; 
             collisionEffectParticleSystem.Play();
-            //destroy the object
+            // Destroy the object
             GameObject.Destroy(collision.gameObject);
-            //decrease lives
+            // Decrease lives
             lives--;
             updateLives(lives);
-            //check if the player is dead
+            // Check if the player is dead
             if (lives < 1)
             {
                 isAlive = false;
                 Invoke("DisplayGameOverUI", 0);
-            }
-            
+            } 
         } 
     } 
  
-    //freeze time and swap to the Game Over ui
+    // Freeze time and swap to the Game Over ui
     private void DisplayGameOverUI() 
     { 
         UiController.ChangeUiPanel(1);

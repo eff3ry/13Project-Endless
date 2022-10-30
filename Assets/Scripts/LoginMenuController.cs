@@ -21,7 +21,7 @@ public class LoginMenuController : MonoBehaviour
 
     [Header("Register Menu Objects")]
     [SerializeField] TMP_InputField registerUsernameEntry;
-    [SerializeField] const int CharLim = 20; //Username char max limit, constant for a more robust program
+    [SerializeField] const int CharLim = 20; // Username character max limit is set as a constant for a more robust program.
     [SerializeField] TMP_InputField registerEmailEntry;
     [SerializeField] TMP_InputField registerPasswordEntry;
     [SerializeField] TMP_InputField registerPasswordConfirmEntry;
@@ -43,15 +43,13 @@ public class LoginMenuController : MonoBehaviour
 
     void Awake()
     {
-        //find the user manager for usefull user related functions
+        // Find the user manager to access usefull user related functions
         userManager = FindObjectOfType<UserManager>();
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        //set buttons to call methods
+        // Set the buttons to call the appropriate methods
         switchToRegisterButton.onClick.AddListener(delegate { 
             switchPanels(registerMenu, loginMenu);
             clearFields();
@@ -78,8 +76,8 @@ public class LoginMenuController : MonoBehaviour
             quitGame();
         });
 
-        //login the current user when scene loads
-        //if the user is already logged in
+        // If the user is already logged in when loading the scene,
+        // Update information and display the main menu
         if (userManager.currentUserIndex > -1)
         {
             hideAllPanels();
@@ -88,18 +86,19 @@ public class LoginMenuController : MonoBehaviour
         }
     }
 
-    // exits game
+    // Exit the program
     void quitGame()
     {
         Application.Quit();
     }
+
+    // Load the game scene
     void startGame()
     {
         SceneManager.LoadScene("Game");
     }
 
-    //clear the input fields
-    //sets all the text components to empty strings
+    // Clear all the text input fields by setting the text to empty strings
     void clearFields()
     {
         loginUsernameEntry.text = "";
@@ -113,16 +112,15 @@ public class LoginMenuController : MonoBehaviour
         registerErrorText.text = "";
     }
 
-    //switch ui panels
-    //hides the current object and shows the requested one
+    // Hides the current object and shows the requested one,
+    // Used for menu purposes
     void switchPanels(GameObject show, GameObject hide)
     {
         show.SetActive(true);
         hide.SetActive(false);
     }
 
-    //hide all ui panels
-    //hides all menu gameobjects
+    // Hides all menu GameObjects
     void hideAllPanels()
     {
         loginMenu.SetActive(false);
@@ -131,14 +129,15 @@ public class LoginMenuController : MonoBehaviour
     }
 
 
-    //register account
-    //accepts username email and password
+    // Register account
+    // Accepts username email and password
+    // Validates all inputs
     void register()
     {
-        //load data from file
+        // Load data from file
         List<userData> usersData = userManager.loadData();
 
-        //Vaidates username
+        // Vaidates username
         string errorMsg = validateUsername(registerUsernameEntry.text, usersData);
         if (errorMsg != null)
         {
@@ -146,7 +145,7 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
-        //validates password
+        // Validates password
         errorMsg = validatePassword(registerPasswordEntry.text, registerPasswordConfirmEntry.text);
         if (errorMsg != null)
         {
@@ -154,7 +153,7 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
-        //validates email
+        // Validates email
         errorMsg = validateEmail(registerEmailEntry.text, usersData);
         if (errorMsg != null)
         {
@@ -162,14 +161,14 @@ public class LoginMenuController : MonoBehaviour
             return;
         }
 
-        //ass checks passed so create new user
+        // All the checks above passed,
+        // So create a new user, add to the list of users and save
         userData newUser = new userData(registerUsernameEntry.text, registerPasswordEntry.text, registerEmailEntry.text);
         usersData.Add(newUser);
         userManager.saveData(usersData);
         switchPanels(profileMenu, registerMenu);
         updateProfile(newUser);
 
-        //PlayerPrefs.SetString("currentUser", newUser._userName);
         userManager.currentUserIndex = usersData.IndexOf(newUser);
         userManager.currentUser = newUser;
 
@@ -181,20 +180,20 @@ public class LoginMenuController : MonoBehaviour
     {
         List<userData> usersData = userManager.loadData();
 
-        //find username
+        // Find username
         userData foundUser = null;
         foreach (userData data in usersData)
         {
             if (loginUsernameEntry.text == data._userName)
             {
-                //username found
+                // Username found
                 if (loginPasswordEntry.text == data._password)
                 {
-                    //correct password
+                    // Correct password
                     foundUser = data;
                 } else 
                 {
-                    //wrong password
+                    // Wrong password
                     loginErrorText.text = "Username or Password is incorrect";
                     return;
                 }
@@ -203,36 +202,34 @@ public class LoginMenuController : MonoBehaviour
 
         if (foundUser == null)
         {
-            //didnt find username
+            // Didnt find username
             loginErrorText.text = "Username or Password is incorrect";
             return;
         } else 
         {
-            //both username and passowrd were correct
-            //log in
+            // Both username and passowrd were correct,
+            // Log in
             switchPanels(profileMenu, loginMenu);
             updateProfile(foundUser);
-            //PlayerPrefs.SetString("currentUser", foundUser._userName);
             userManager.currentUserIndex = usersData.IndexOf(foundUser);
             userManager.currentUser = foundUser;
             clearFields();
         }
     }
 
-    //logout of account
+    // Logout of account
     void logout()
     {
-        //set data to empty
+        // Set the displayed data to empty data
         updateProfile(new userData());
-        //switch to menu
+        // Switch to main menu
         switchPanels(loginMenu, profileMenu);
-
-        //set curent user to null
+        // Set curent user to null
         userManager.currentUser = null;
         userManager.currentUserIndex = -1;
     }
 
-    //update the ui for the profile
+    // Update the UI for the profile
     void updateProfile(userData userData)
     {
         profileUsername.text = userData._userName;
@@ -240,21 +237,21 @@ public class LoginMenuController : MonoBehaviour
         profileHighscore.text = $"Highscore: {userData.highScore}";
     }
 
-    //returns an error message or null if username is valid
+    // Validate Username Method.
+    // Returns an error message or null if username is valid.
     string validateUsername(string username, List<userData> usersData)
     {
-        //check if username is empty or has whitespaces
+        // Check if username is empty or has whitespaces
         if (string.IsNullOrWhiteSpace(username) || username.Contains(" "))
         {
             return "Username is empty or contains spaces";
         }
-
+        // Check if the username is more than the character limit
         if (username.Length > CharLim)
         {
             return "Username is longer than the 20 character limit";
         }
-
-        //Check if username already exists
+        // Check if username already exists
         foreach (userData userData in usersData)
         {
             if (username == userData._userName)
@@ -266,15 +263,15 @@ public class LoginMenuController : MonoBehaviour
         return null;
     }
 
-    //returns an error message or null if password is valid
+    // Returns an error message or null if password is valid
     string validatePassword(string password, string passwordConfirmation)
     {
-        //check if password is empty or has whitespaces
+        // Check if password is empty or has whitespaces
         if (string.IsNullOrWhiteSpace(password) || password.Contains(" "))
         {
             return "Password is empty or contains spaces";
         }
-
+        // Check that both password and confirmation password match
         if (passwordConfirmation != password)
         {
             return "Passwords do not match";
@@ -282,15 +279,16 @@ public class LoginMenuController : MonoBehaviour
         return null;
     }
 
-    //returns an error message or null if email is valid
+    // Returns an error message or null if email is valid
     string validateEmail(string email, List<userData> usersData)
     {
+        // Check if the email is valid by looking for a '@' symbol
         if (!email.Contains("@"))
         {
             return "That is not a valid email";
         }
 
-        //Check if email already exists
+        // Check if email already exists
         foreach (userData userData in usersData)
         {
             if (email == userData._email)

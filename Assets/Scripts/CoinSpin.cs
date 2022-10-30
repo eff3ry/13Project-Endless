@@ -5,8 +5,8 @@ using UnityEngine;
 public class CoinSpin : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 10f;
-    // Update is called once per frame
-    // constantly rotates the coin 
+    // Update is called once per frame,
+    // Constantly rotates the coin 
     void Update()
     {
         Vector3 rot =transform.localEulerAngles;

@@ -12,28 +12,28 @@ public class UserManager : MonoBehaviour
     public int currentUserIndex = -1;
     static bool created = false;
 
-    //make sure there is only ever one usermanager
+    // Make sure there is only ever one usermanager
     void Awake()
     {
-        //this code makes sure there is only one of this object in the scene basically a singleton
+        // This code makes sure there is only one of this object in the scene basically a singleton
         if (!created || GameObject.FindObjectsOfType<UserManager>().Length == 1) {
-            // this is the first instance - make it persist
+            // This is the first instance - make it persist
             DontDestroyOnLoad(this.gameObject);
             created = true;
 
-            //since it is the first instance set current user to empty user
+            // Since it is the first instance set current user to empty user
             currentUser = null;
             currentUserIndex =-1;
         } else if (GameObject.FindObjectsOfType<UserManager>().Length > 1) {
-            // this must be a duplicate from a scene reload - DESTROY!
+            // This must be a duplicate from a scene reload - DESTROY!
             Destroy(this.gameObject);
         }
     }  
 
-    //load user info from file
+    // Load user info from file
     public List<userData> loadData()
     {
-        //if the file exists load it if not return empty class object
+        // If the file exists load it if not return empty class object
         if (File.Exists(Application.persistentDataPath + "/usersData.dat"))
         {
             List<userData> usersData = new List<userData>();
@@ -52,7 +52,7 @@ public class UserManager : MonoBehaviour
         }
     }
     
-    //save user info to file
+    // Save user info to file
     public void saveData(List<userData> usersData)
     {
         BinaryFormatter bf = new BinaryFormatter();
@@ -63,18 +63,18 @@ public class UserManager : MonoBehaviour
 }
 
 
-//user info class
-//stores username and password and email and highscore in a custom object for saving and loading
+// User info class
+// Stores username and password and email and highscore in a custom object for saving and loading
 [Serializable]
 public class userData
 {
-    //read only for variables that should'nt be edited
+    // Read only for variables that should'nt be edited but still need to be read
     readonly public string _userName;
     readonly public string _password;
     readonly public string _email;
     public int highScore;
 
-    //constructor for a full object
+    // Constructor for a full object
     public userData(string userName, string password, string email)
     {
         _userName = userName;
@@ -83,7 +83,7 @@ public class userData
         highScore = 0;
     }
 
-    //constructor for a empty object
+    // Constructor for a empty object
     public userData()
     {
         _userName = null;

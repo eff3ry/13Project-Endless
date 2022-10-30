@@ -11,43 +11,41 @@ public class ObjectSpawner2 : MonoBehaviour
     public float obstacleSpeed = 15f;
     public GameObject cloneParent;
     public GameObject[] rewards;
-    //public GameObject coin;
     public GameObject obstacle;
     float timer = 0;
 
-    // Update is called once per frame
-    //spawns items when timer is 0
+    // Spawns items when timer is 0
     void Update()
     {
-        //keep track of time
+        // Keep track of time
         timer += Time.deltaTime;
 
-        //when timer is done
+        // When timer is done
         if (timer > spawnTime)
         {
             timer = 0;
 
-            //generate a list of objects to spawn
+            // Generate a list of objects to spawn
             List<int> spawnList = generateSpawnList();
             // Make sure there is an object which lets you pass (make sure it not impossible)
-            //keep generating until there is a valid list
+            // Keep generating until there is a valid list
             while (!(spawnList.Contains(0) || spawnList.Contains(2)))
             {
                 spawnList = generateSpawnList();
             }
 
-            //loop throught the list to insntantiate each object
+            // Loop throught the list to insntantiate each object
             for (int i = 0; i < spawnList.Count; i++)
             {
                 if (spawnList[i] == 1)
                 {
-                    //spawn obstacle
+                    // Spawn obstacle
                     GameObject obj = Instantiate(obstacle, spawnPoints[i].transform.position, transform.rotation, cloneParent.transform); 
                     obj.GetComponent<ObstacleMovement>().speed = obstacleSpeed;
-                    //Debug.Log("Spawn Obstacle");
+                    Debug.Log("Spawn Obstacle");
                 } else if (spawnList[i] == 2)
                 {
-                    //pick random reward
+                    // Pick random reward
                     int reward = Random.Range(0,rewards.Length);
 
                     GameObject obj = Instantiate(rewards[reward], spawnPoints[i].transform.position, transform.rotation, cloneParent.transform); 
@@ -58,15 +56,15 @@ public class ObjectSpawner2 : MonoBehaviour
         }
     }
 
+    
+
+    // Makes a list of ints for deciding the object to spawn and in what position
+    // Based off of the following values,
     // 0 is empty
     // 1 is obstacle
     // 2 is reward
-
-
-    //generates a list on items to spawn
     List<int> generateSpawnList()
     {
-        //makes a list of ints for deciding the object to spawn and in what position
         List<int> spawns = new List<int>();
         foreach (GameObject point in spawnPoints)
         {
@@ -74,7 +72,7 @@ public class ObjectSpawner2 : MonoBehaviour
             spawns.Add(random);
         }
 
-        //chance for an empty to turn into a coin
+        // Chance for an empty to turn into a coin
         for (int i = 0; i < spawns.Count; i++)
         {
             if (spawns[i] == 0 && Random.Range(0,101) < coinChance)
