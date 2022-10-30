@@ -43,7 +43,7 @@ public class LoginMenuController : MonoBehaviour
 
     void Awake()
     {
-        // Find the user manager to access usefull user related functions
+        // Find the user manager to access useful user related functions
         userManager = FindObjectOfType<UserManager>();
     }
 

@@ -6,27 +6,29 @@ using TMPro;
 
 public class Player : MonoBehaviour 
 { 
-    //Movement Vars
+    // Movement Vars
     [Header("Movement Vars")]
     [SerializeField] private const float speed = 10f; //constant for a more robust program
     [SerializeField] private const float rotationSpeed = 10f;//constant for a more robust program
     [SerializeField] private const float targetAngle = 30f;//constant for a more robust program
 
-    //Effects
+    // Effects
     [Header("Effects")]
     [SerializeField] private GameObject coinEffect;
     private ParticleSystem coinEffectParticleSystem;
     [SerializeField] private GameObject collisionEffect;
     private ParticleSystem collisionEffectParticleSystem;
 
-    //Gameplay
+    // Gameplay
     [Header("Gameplay")]
     [SerializeField] public int score;
     [SerializeField] private int lives;
-    [SerializeField] private const int maxLives = 5; //constant for a more robust program
+    // Constant for a more robust program,
+    // a constant because this should'nt be changed during runtime
+    [SerializeField] private const int maxLives = 5; 
     public bool isAlive;
 
-    //UI
+    // UI
     [Header("UI")]
     private UiController UiController;
     [SerializeField] private TMP_Text scoreText;
@@ -100,6 +102,7 @@ public class Player : MonoBehaviour
     private void updateLives(int lives)
     {
         livesText.text = $"Lives: {lives}";
+        // The Health bar is adaptive and changes appropriately if maxLives is changes
         float healthBarPercentage = (float)lives/(float)maxLives;
         healthBar.fillAmount = healthBarPercentage;
         Debug.Log($"Lives: {lives}");

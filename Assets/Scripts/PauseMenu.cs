@@ -26,7 +26,13 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && player.isAlive)
         {
             // If active call resume and if not active call pause
-            (menu.activeSelf)? resume() : pause();            
+            if (menu.activeSelf)
+            {
+                resume();
+            } else 
+            {
+                pause();
+            }   
         }
     }
 

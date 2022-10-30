@@ -14,7 +14,7 @@ public class HighscoreManager : MonoBehaviour
 
     void Awake()
     {
-        // Find the usermanager GameObject in the scene,
+        // Find the user manager GameObject in the scene,
         // as it holds the current user
         userManager = FindObjectOfType<UserManager>();
     }
